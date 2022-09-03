@@ -1,6 +1,8 @@
 # express-user-service
 this is user microservice built with express, mongodb and redis
 
+demo application https://syauqi-user-service.herokuapp.com/doc
+
 create .env file
 
 fill the required value
