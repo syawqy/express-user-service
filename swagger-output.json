@@ -5,7 +5,7 @@
     "description": "User CRUD and login API using JWT",
     "version": "1.0.0"
   },
-  "host": "syauqi-user-service.herokuapp.com:3000",
+  "host": "syauqi-user-service.herokuapp.com:80",
   "basePath": "/",
   "schemes": [
     "http"
