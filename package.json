@@ -25,6 +25,7 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "path": "^0.12.7",
+    "recachegoose": "^9.0.0",
     "swagger-autogen": "^2.21.5",
     "swagger-ui-express": "^4.4.0",
     "xss-clean": "^0.1.1"

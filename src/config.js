@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path');
 const Joi = require('joi');
+const { join } = require('path');
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
@@ -17,7 +18,13 @@ const envVarsSchema = Joi.object()
       .description('minutes after which reset password token expires'),
     JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number()
       .default(10)
-      .description('minutes after which verify email token expires')
+      .description('minutes after which verify email token expires'),
+    REDIS_URL: Joi.string().required().description('Redis URL'),
+    REDIS_CACHE_LIFETIME: Joi.number().default(120),
+    REDIS_HOST: Joi.string().required(),
+    REDIS_PORT: Joi.number().required(),
+    REDIS_USER: Joi.string().required(),
+    REDIS_PASSWORD: Joi.string().required()
   })
   .unknown();
 
@@ -44,5 +51,13 @@ module.exports = {
     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
     resetPasswordExpirationMinutes: envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
     verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
+  },
+  redis: {
+    redisUrl: envVars.REDIS_URL,
+    redisCacheLifeTime: envVars.REDIS_CACHE_LIFETIME,
+    redisHost: envVars.REDIS_HOST,
+    redisPort: envVars.REDIS_PORT,
+    redisUser: envVars.REDIS_USER,
+    redisPassword: envVars.REDIS_PASSWORD,
   }
 };

@@ -1,6 +1,8 @@
 const UserModel = require('../models/user.model');
 const authService = require('../services/auth.service');
 const Joi = require('joi');
+const config = require('../config');
+const cachegoose = require('recachegoose');
 
 exports.generateToken = async (req, res) => {
     try {
@@ -14,7 +16,7 @@ exports.generateToken = async (req, res) => {
 
 exports.getAll = async (req, res) => {
     try {
-        let foundUser = await UserModel.find();
+        let foundUser = await UserModel.find().cache(config.redisCacheLifeTime, 'userAll');
         
         if(!foundUser || foundUser.length == 0) {
             res.status(404).json({message: "User not found!"});
@@ -51,6 +53,9 @@ exports.create = async (req, res) => {
         if(!foundUser || foundUser.length == 0) {
             const user = new UserModel(value);
             const response = await user.save();
+            
+            cachegoose.clearCache('userAll');
+
             res.status(201).json(response);
         } else {
             res.status(409).json({message: "User already exists!"});
@@ -64,7 +69,7 @@ exports.create = async (req, res) => {
 exports.read = async (req, res) => {
     const {id} = req.params;
     try {
-        const foundUser = await UserModel.findOne({_id: id});
+        const foundUser = await UserModel.findOne({_id: id}).cache(config.redisCacheLifeTime, id);
 
         if(!foundUser || foundUser.length == 0) {
             res.status(404).json({message: "User not found!"});
@@ -80,7 +85,7 @@ exports.read = async (req, res) => {
 exports.getByAccountNumber = async (req, res) => {
     const {id} = req.params;
     try {
-        const foundUser = await UserModel.find({accountNumber: id});
+        const foundUser = await UserModel.find({accountNumber: id}).cache(config.redisCacheLifeTime, id);
 
         if(!foundUser || foundUser.length == 0) {
             res.status(404).json({message: "User not found!"});
@@ -96,7 +101,7 @@ exports.getByAccountNumber = async (req, res) => {
 exports.getByIdentityNumber = async (req, res) => {
     const {id} = req.params;
     try {
-        const foundUser = await UserModel.find({identityNumber: id});
+        const foundUser = await UserModel.find({identityNumber: id}).cache(config.redisCacheLifeTime, id);
 
         if(!foundUser || foundUser.length == 0) {
             res.status(404).json({message: "User not found!"});
@@ -131,9 +136,17 @@ exports.update = async (req, res) => {
             });
         }
     
-        if(foundUser || foundUser.length == 0) {
+        if (foundUser || foundUser.length == 0) {
+            let oldUser = {};
+            Object.assign(oldUser, foundUser);
             Object.assign(foundUser, value);
             await foundUser.save();
+
+            cachegoose.clearCache('userAll');
+            cachegoose.clearCache(foundUser._id);
+            cachegoose.clearCache(oldUser.identityNumber);
+            cachegoose.clearCache(oldUser.accountNumber);
+
             res.status(200).json(foundUser);
         } else {
             res.status(404).json({message: `User not found...`});

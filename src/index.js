@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const cachegoose = require('recachegoose');
 const config = require('./config');
 const app = require('./app');
 
@@ -6,7 +7,18 @@ const app = require('./app');
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then((response) => {
     console.log('Connected to the database...');
-    server = app.listen(config.port,'0.0.0.0', () => {
+    cachegoose(mongoose, {
+        engine: 'redis',
+        port: config.redis.redisPort,
+        host: config.redis.redisHost,
+        username: config.redis.redisUser,
+        password: config.redis.redisPassword
+    });
+    // cachegoose(mongoose, {
+    //     engine: 'memory'
+    // });
+
+    server = app.listen(config.port, () => {
         console.log(`Listening to port ${config.port}`);
     });
 });
