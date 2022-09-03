@@ -1,11 +1,12 @@
 const swaggerAutogen = require('swagger-autogen')();
+const config = require('./src/config');
 
 const doc = {
   info: {
     title: 'User API',
     description: 'User CRUD and login API using JWT',
   },
-  host: 'localhost:3000',
+  host: `${config.host}:${config.port}`,
   schemes: ['http'],
   security: [ { bearerAuth: [] } ],
   securityDefinitions: {
