@@ -6,7 +6,7 @@ const app = require('./app');
 let server;
 mongoose.connect(config.mongoose.url, config.mongoose.options).then((response) => {
     console.log('Connected to the database...');
-    server = app.listen(config.port, () => {
+    server = app.listen(config.port,'0.0.0.0', () => {
         console.log(`Listening to port ${config.port}`);
     });
 });
