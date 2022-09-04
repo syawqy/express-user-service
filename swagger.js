@@ -1,12 +1,13 @@
 const swaggerAutogen = require('swagger-autogen')();
 const config = require('./src/config');
+const port = config.env == "production" ? "" : ":"+config.port;
 
 const doc = {
   info: {
     title: 'User API',
     description: 'User CRUD and login API using JWT',
   },
-  host: `${config.host}:${config.port}`,
+  host: `${config.host}${port}`,
   schemes: ['http'],
   security: [ { bearerAuth: [] } ],
   securityDefinitions: {
