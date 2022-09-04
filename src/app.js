@@ -25,7 +25,8 @@ app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
 
 app.get('/', (req, res) => {
-    res.status(200).json({message: "Hello world!"});
+    // res.status(200).json({ message: "Hello world!" });
+    res.redirect('/doc');
 });
 
 app.use('/users', userRouter);

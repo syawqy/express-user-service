@@ -7,8 +7,8 @@ create .env file
 
 fill the required value
 
-run npm i to install dependencies
+run `npm i` to install dependencies
 
-run node swagger to generate swagger.json
+run `node swagger` to generate swagger.json
 
-run npm run dev to try the apps
+run `npm run dev` to try the apps
